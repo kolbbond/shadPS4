@@ -40,6 +40,8 @@ int main(int argc, char* argv[]) {
     bool waitForDebugger = false;
     std::optional<int> waitPid;
 
+    std::printf("--- shadPS4 Emulator ---\n");
+
     // Map of argument strings to lambda functions
     std::unordered_map<std::string, std::function<void(int&)>> arg_map = {
         {"-h",
@@ -69,6 +71,7 @@ int main(int argc, char* argv[]) {
                     "only, ignores game specific configs.\n"
                     "  --show-fps                    Enable FPS counter display at startup\n"
                     "  -h, --help                    Display this help message\n";
+            std::printf("--- Exit ---\n");
              exit(0);
          }},
         {"--help", [&](int& i) { arg_map["-h"](i); }},
@@ -186,12 +189,13 @@ int main(int argc, char* argv[]) {
         {"--show-fps", [&](int& i) { Config::setShowFpsCounter(true); }}};
 
     if (argc == 1) {
-        if (!SDL_ShowSimpleMessageBox(
-                SDL_MESSAGEBOX_INFORMATION, "shadPS4",
-                "This is a CLI application. Please use the QTLauncher for a GUI: "
-                "https://github.com/shadps4-emu/shadps4-qtlauncher/releases",
-                nullptr))
-            std::cerr << "Could not display SDL message box! Error: " << SDL_GetError() << "\n";
+        // if (!SDL_ShowSimpleMessageBox(
+        //        SDL_MESSAGEBOX_INFORMATION, "shadPS4",
+        //                "This is a CLI application. Please use the QTLauncher for a GUI: "
+        //                "https://github.com/shadps4-emu/shadps4-qtlauncher/releases",
+        //               nullptr))
+        //          std::cerr << "Could not display SDL message box! Error: " << SDL_GetError() <<
+        //          "\n";
         int dummy = 0; // one does not simply pass 0 directly
         arg_map.at("-h")(dummy);
         return -1;
@@ -261,6 +265,8 @@ int main(int argc, char* argv[]) {
     if (waitPid.has_value()) {
         Core::Debugger::WaitForPid(waitPid.value());
     }
+
+    LOG_INFO(Config, "Starting shadPS4: {}", Config::getLogType());
 
     // Run the emulator with the resolved eboot path
     Core::Emulator* emulator = Common::Singleton<Core::Emulator>::Instance();
