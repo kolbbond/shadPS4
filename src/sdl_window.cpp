@@ -360,6 +360,7 @@ void WindowSDL::WaitEvent() {
     // Called on main thread
     SDL_Event event;
 
+        LOG_INFO(Debug, "DEBUG: {}", "start of WaitEvent");
     if (!SDL_WaitEvent(&event)) {
         return;
     }
@@ -367,6 +368,12 @@ void WindowSDL::WaitEvent() {
     if (ImGui::Core::ProcessEvent(&event)) {
         return;
     }
+
+    // imgui window
+    //if (ImGui::Begin("test window")) {
+     //   ImGui::Text("Event type: %d", event.type);
+    //}
+    //ImGui::End();
 
     switch (event.type) {
     case SDL_EVENT_WINDOW_RESIZED:
@@ -468,6 +475,7 @@ void WindowSDL::WaitEvent() {
     default:
         break;
     }
+        LOG_INFO(Debug, "DEBUG: {}", "end of WaitEvent");
 }
 
 void WindowSDL::InitTimers() {

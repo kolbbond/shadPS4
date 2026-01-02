@@ -1,6 +1,7 @@
 // SPDX-FileCopyrightText: Copyright 2025 shadPS4 Emulator Project
 // SPDX-License-Identifier: GPL-2.0-or-later
 
+#include "core/libraries/audio/audioout.h"
 #include "layer.h"
 
 #include <SDL3/SDL_events.h>
@@ -124,6 +125,24 @@ void L::DrawMenuBar() {
             }
             if (MenuItem("Module list")) {
                 module_list.open = true;
+            }
+            ImGui::EndMenu();
+        }
+
+        // debug mine
+        if (BeginMenu("Additional Options")) {
+            ImGui::Text("Username: %s", Config::getUserName().c_str());
+            if (BeginMenu("Volume")) {
+                static int volume = 0;
+                // auto& pp_settings = presenter->GetPPSettingsRef();
+                SliderInt("Volume", &volume, 1, 100);
+                Config::setVolumeSlider(static_cast<int>(volume), false);
+                Libraries::AudioOut::AdjustVol();
+                ImGui::EndMenu();
+            }
+            static bool is_vsync = false;
+            if (MenuItemEx("Vsync", nullptr, nullptr, &is_vsync)) {
+                Config::setPresentMode("Immediate");
             }
             ImGui::EndMenu();
         }

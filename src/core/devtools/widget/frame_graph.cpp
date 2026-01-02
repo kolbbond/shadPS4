@@ -101,6 +101,11 @@ void FrameGraph::Draw() {
         Text("Output Res: %dx%d", DebugState.output_resolution.first,
              DebugState.output_resolution.second);
         Text("FSR: %s", DebugState.is_using_fsr ? "on" : "off");
+
+        SeparatorText("Additional info");
+        Text("Username: %s", Config::getUserName().c_str());
+        Text("Volume: %d", Config::getVolumeSlider());
+        Text("Vsync: %s", Config::getPresentMode().c_str());
     }
     End();
 }

@@ -356,6 +356,8 @@ void Emulator::Run(std::filesystem::path file, std::vector<std::string> args,
         }
     });
 
+    LOG_INFO(Debug, "DEBUG: {}", "debug");
+
 #ifdef ENABLE_DISCORD_RPC
     // Discord RPC
     if (Config::getEnableDiscordRPC()) {
@@ -367,25 +369,35 @@ void Emulator::Run(std::filesystem::path file, std::vector<std::string> args,
     }
 #endif
 
+    LOG_INFO(Debug, "DEBUG: {}", "debug");
     if (!id.empty()) {
         start_time = std::chrono::steady_clock::now();
 
+        LOG_INFO(Debug, "DEBUG: {}", "debug");
         std::thread([this, id]() {
             while (true) {
+                LOG_INFO(Debug, "DEBUG: {}", "debug");
                 std::this_thread::sleep_for(std::chrono::seconds(60));
                 UpdatePlayTime(id);
                 start_time = std::chrono::steady_clock::now();
             }
         }).detach();
     }
+    
+    LOG_INFO(Debug, "DEBUG: {}", "debug");
 
     args.insert(args.begin(), eboot_name.generic_string());
     linker->Execute(args);
 
     window->InitTimers();
     while (window->IsOpen()) {
+        // debug
+        LOG_INFO(Debug, "DEBUG: {}", "debug");
         window->WaitEvent();
     }
+
+    // debug
+    LOG_INFO(Debug, "Exiting main loop\n");
 
     UpdatePlayTime(id);
     Storage::DataBase::Instance().Close();
